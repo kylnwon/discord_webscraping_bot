@@ -8,15 +8,6 @@ import time
 from dotenv import load_dotenv
 import os
 
-"""
-Program should run webscraper upon using "/bestbuy" list all entries on
-search page, and upon adding item to "cart" continuosly reload page every 
-60 seconds or so and email upon restock 
-
-Selection menu for which item to add to "cart"
-
-"""
-
 scraped = scraper.webscraping()
 load_dotenv('.env')
 TOKEN=os.getenv('TOKEN')
@@ -45,7 +36,6 @@ async def on_message(message):
         keywords = scraped.get_keywords(cor_message)
         url = scraped.send_url(keywords)
         scraped.driver.get(url)
-        #scrolling()
         #getting item names and urls
         items = scraped.driver.find_elements(By.CLASS_NAME, 'sku-title [href]')
         links = [item.get_attribute('href') for item in items]
@@ -53,7 +43,6 @@ async def on_message(message):
         statuses = scraped.driver.find_elements(By.CLASS_NAME, "fulfillment-fulfillment-summary")
         #get price 
         prices = scraped.driver.find_elements(By.CLASS_NAME, 'priceView-hero-price.priceView-customer-price')
-        # "c-button c-button-disabled c-button-sm c-button-block add-to-cart-button"
 
         for i in range(4):
             s = str(prices[i].text) + ". Item is: " + str(statuses[i].text)+ "\n" + str(items[i].text)
